@@ -1,4 +1,4 @@
-FROM ubuntu:20.04 as cross-base
+FROM ubuntu:24.04 as cross-base
 ENV DEBIAN_FRONTEND=noninteractive
 
 COPY common.sh lib.sh /
@@ -12,7 +12,7 @@ RUN /xargo.sh
 
 FROM cross-base as build
 
-RUN echo "export ARCH=i686" > /freebsd-arch.sh
+RUN echo "export ARCH=i686" >/freebsd-arch.sh
 COPY freebsd-common.sh /
 COPY freebsd.sh /
 RUN /freebsd.sh

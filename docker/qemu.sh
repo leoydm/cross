@@ -6,14 +6,13 @@ set -euo pipefail
 # shellcheck disable=SC1091
 . lib.sh
 
-build_static_libffi () {
-    local version=3.0.13
+build_static_libffi() {
+    local version=3.4.6
 
     local td
     td="$(mktemp -d)"
 
     pushd "${td}"
-
 
     curl --retry 3 -sSfL "https://github.com/libffi/libffi/archive/refs/tags/v${version}.tar.gz" -O -L
     tar --strip-components=1 -xzf "v${version}.tar.gz"
@@ -26,12 +25,12 @@ build_static_libffi () {
     rm -rf "${td}"
 }
 
-build_static_libmount () {
+build_static_libmount() {
     local version_spec=2.23.2
     local version=2.23
 
-    if_ubuntu_ge 22.04 version_spec=2.37.2
-    if_ubuntu_ge 22.04 version=2.37
+    if_ubuntu_ge 22.04 version_spec=2.40.2
+    if_ubuntu_ge 22.04 version=2.40
 
     local td
     td="$(mktemp -d)"
@@ -49,9 +48,8 @@ build_static_libmount () {
     rm -rf "${td}"
 }
 
-
 build_static_libattr() {
-    local version=2.4.46
+    local version=2.5.2
 
     local td
     td="$(mktemp -d)"
@@ -77,7 +75,7 @@ build_static_libattr() {
 }
 
 build_static_libcap() {
-    local version=2.22
+    local version=2.70
 
     local td
     td="$(mktemp -d)"
@@ -95,7 +93,7 @@ build_static_libcap() {
 }
 
 build_static_pixman() {
-    local version=0.34.0
+    local version=0.43.4
 
     local td
     td="$(mktemp -d)"
@@ -114,7 +112,7 @@ build_static_pixman() {
 }
 
 build_static_slirp() {
-    local version=4.1.0
+    local version=4.8.0
 
     local td
     td="$(mktemp -d)"
@@ -150,7 +148,7 @@ main() {
         libtool \
         make \
         patch \
-        python3 \
+        python3
 
     if_centos install_packages \
         gcc-c++ \
@@ -193,7 +191,8 @@ main() {
         libglib2.0-dev \
         libpixman-1-dev \
         libselinux1-dev \
-        zlib1g-dev
+        zlib1g-dev \
+        libsqlite3-dev
 
     # ubuntu no longer provides statically linked libmount
     if_ubuntu_ge 22.04 build_static_libmount
@@ -227,21 +226,21 @@ main() {
     local targets="${arch}-linux-user"
     local virtfs=""
     case "${softmmu}" in
-        softmmu)
-            if [ "${arch}" = "ppc64le" ]; then
-                targets="${targets},ppc64-softmmu"
-            else
-                targets="${targets},${arch}-softmmu"
-            fi
-            virtfs="--enable-virtfs"
-            ;;
-        "")
-            true
-            ;;
-        *)
-            echo "Invalid softmmu option: ${softmmu}"
-            exit 1
-            ;;
+    softmmu)
+        if [ "${arch}" = "ppc64le" ]; then
+            targets="${targets},ppc64-softmmu"
+        else
+            targets="${targets},${arch}-softmmu"
+        fi
+        virtfs="--enable-virtfs"
+        ;;
+    "")
+        true
+        ;;
+    *)
+        echo "Invalid softmmu option: ${softmmu}"
+        exit 1
+        ;;
     esac
 
     ./configure \

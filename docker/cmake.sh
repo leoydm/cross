@@ -7,7 +7,7 @@ set -euo pipefail
 . lib.sh
 
 main() {
-    local version=3.23.1
+    local version=3.30.3
 
     install_packages curl
 

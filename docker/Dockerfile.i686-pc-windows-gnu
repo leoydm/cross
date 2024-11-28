@@ -1,4 +1,4 @@
-FROM ubuntu:20.04 as cross-base
+FROM ubuntu:24.04 as cross-base
 ENV DEBIAN_FRONTEND=noninteractive
 
 COPY common.sh lib.sh /
@@ -12,7 +12,7 @@ RUN /xargo.sh
 
 FROM cross-base as build
 
-RUN dpkg --add-architecture i386 && apt-get update && \
+RUN dpkg --add-architecture i386 && apt-get update &&
     apt-get install --assume-yes --no-install-recommends libz-mingw-w64-dev
 
 COPY wine.sh /
@@ -28,9 +28,9 @@ RUN bash mingw.sh
 # directly. This only affects the guest, we are not messing up with the host.
 #
 # See /usr/share/doc/binfmt-support/detectors
-RUN mkdir -p /usr/lib/binfmt-support/ && \
-    rm -f /usr/lib/binfmt-support/run-detectors /usr/bin/run-detectors && \
-    ln -s /usr/bin/wine /usr/lib/binfmt-support/run-detectors && \
+RUN mkdir -p /usr/lib/binfmt-support/ &&
+    rm -f /usr/lib/binfmt-support/run-detectors /usr/bin/run-detectors &&
+    ln -s /usr/bin/wine /usr/lib/binfmt-support/run-detectors &&
     ln -s /usr/bin/wine /usr/bin/run-detectors
 
 COPY windows-entry.sh /

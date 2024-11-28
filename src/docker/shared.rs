@@ -25,7 +25,7 @@ pub use super::custom::CROSS_CUSTOM_DOCKERFILE_IMAGE_PREFIX;
 
 pub const CROSS_IMAGE: &str = "ghcr.io/cross-rs";
 // note: this is the most common base image for our images
-pub const UBUNTU_BASE: &str = "ubuntu:20.04";
+pub const UBUNTU_BASE: &str = "ubuntu:24.04";
 pub const DEFAULT_IMAGE_VERSION: &str = if crate::commit_info().is_empty() {
     env!("CARGO_PKG_VERSION")
 } else {
